@@ -8,7 +8,7 @@ horizontally, from left to right, or vertically, from top to bottom. In the exam
 stream has four words and the matrix contains only three of those words ("chill", "cold" and
 "wind"):
 
-![alt text](image.png)
+![image](https://github.com/user-attachments/assets/4c493855-8fe9-4248-922b-83fbd8680f80)
 
 The WordFinder constructor receives a set of strings which represents a character matrix. The
 matrix size does not exceed 64x64, all strings contain the same number of characters. The
