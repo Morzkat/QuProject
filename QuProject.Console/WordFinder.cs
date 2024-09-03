@@ -20,9 +20,12 @@ namespace QuProject.Console
         {
             if (matrix == null || !matrix.Any()) throw new ArgumentException("Matrix cannot be null or empty.");
 
-            _matrix = matrix.ToList();
             _rows = matrix.Count();
             _cols = matrix.First().Count();
+            _matrix = matrix.ToList();
+
+            if (_rows != _cols) throw new ArgumentException("Matrix must be a square.");
+            if (_rows > 64) throw new ArgumentException("Matrix max size is 64x64");
 
             AddHorizontalWordsToMatrix();
             AddVerticallyWordsToMatrix();
@@ -32,10 +35,11 @@ namespace QuProject.Console
         {
             var foundWords = new Dictionary<string, int>();
 
-            foreach (var word in wordstream.Distinct())
+            foreach (var word in wordstream)
             {
                 if (_matrixSet.Contains(word, new WordsComparer()))
                 {
+                    _matrixSet.Remove(word);
                     if (!foundWords.ContainsKey(word))
                         foundWords[word] = 1;
                     else foundWords[word]++;
@@ -52,21 +56,31 @@ namespace QuProject.Console
 
         private void AddHorizontalWordsToMatrix()
         {
-            foreach (var row in _matrix) _matrixSet.Add(row);
-        }
-
-        public void AddVerticallyWordsToMatrix()
-        {
-            var matrixList = _matrix.ToList();
-            for (int i = 0; i < _cols; i++)
+            foreach (var row in _matrix)
             {
-                var word = "";
-                for (int j = 0; j < _rows; j++) word += matrixList[j][i];
-
-                _matrixSet.Add(word);
+                _matrixSet.Add(row);
+                var reversedRow = new string(row.Reverse().ToArray());
+                _matrixSet.Add(reversedRow);
             }
         }
 
+        private void AddVerticallyWordsToMatrix()
+        {
+            for (int col = 0; col < _cols; col++)
+            {
+                var verticalWord = new StringBuilder();
+                var reversedVerticalWord = new StringBuilder(); 
+
+                for (int row = 0; row < _rows; row++)
+                {
+                    verticalWord.Append(_matrix[row][col]);
+                    reversedVerticalWord.Insert(0, _matrix[row][col]);
+                }
+
+                _matrixSet.Add(verticalWord.ToString());
+                _matrixSet.Add(reversedVerticalWord.ToString());
+            }
+        }
     }
 }
 
